@@ -1,14 +1,19 @@
 <h2>Olympic games app</h2>
 <hr />
 
-<p *ngIf="olympics$ | async as olympics">
-  {{ olympics.length }} countries loaded
-</p>
-
-<ul *ngIf="olympics$ | async as olympics">
-  <li *ngFor="let country of olympics">
-    {{ country.country }} — Participations: {{ country.participations.length }}
-  </li>
-</ul>
-
 <p *ngIf="(olympics$ | async) === null">Error loading data</p>
+
+<!-- Container for the home view -->
+<div class="home-container">
+  <!-- Chart area (renders once olympics$ emits a value) -->
+  <div *ngIf="olympics$ | async as olympics" class="chart-container">
+    <!-- Pie chart showing total medals per country -->
+    <canvas
+      baseChart
+      [data]="chartData"
+      [type]="chartType"
+      [options]="chartOptions">
+    </canvas>
+  </div>
+</div>
+

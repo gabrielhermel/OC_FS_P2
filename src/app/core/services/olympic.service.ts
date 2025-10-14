@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { catchError, tap } from 'rxjs/operators';
+import { catchError, map, tap } from 'rxjs/operators';
 import { OlympicCountry } from '../models/Olympic';
 
 @Injectable({
@@ -34,5 +34,31 @@ export class OlympicService {
   // Exposes the BehaviorSubject as a read-only observable
   getOlympics(): Observable<OlympicCountry[] | null | undefined> {
     return this.olympics$.asObservable();
+  }
+
+  // Returns an observable that emits two arrays: country names and their total medal counts
+  getTotalMedalsByCountry(): Observable<{ countryNames: string[]; countryTotalMedals: number[] }> {
+    return this.getOlympics().pipe(
+      map((list) => {
+        // Handle cases where data is null or undefined
+        if (!list) return { countryNames: [], countryTotalMedals: [] };
+        const countryNames: string[] = [];
+        const countryTotalMedals: number[] = [];
+        // Iterate through each country to extract data
+        for (const country of list) {
+          // Store country name
+          countryNames.push(country.country);
+          // Compute total medals across all participations
+          const totalMedals = country.participations.reduce(
+            (total, participation) => total + (participation.medalsCount ?? 0),
+            0
+          );
+          // Store computed total
+          countryTotalMedals.push(totalMedals);
+        }
+        // Return chart-friendly data structure
+        return { countryNames, countryTotalMedals };
+      })
+    );
   }
 }
