@@ -1,1 +1,37 @@
-/* You can add global styles to this file, and also import other style files */
+/* Main app font */
+@font-face {
+  font-family: 'Montserrat';
+  src: url('/assets/fonts/Montserrat.woff2') format('woff2');
+  font-weight: 100 900;
+  font-display: swap;
+}
+
+/* Custom emoji font for private-use glyphs */
+@font-face {
+  font-family: 'CustomEmoji';
+  src: url('/assets/fonts/custom_emoji_font.woff') format('woff');
+  font-display: swap;
+  unicode-range: U+E001; /* Only applies to glyph at E001 */
+}
+
+body, ngx-tooltip-content.ngx-charts-tooltip-content.type-tooltip {
+  font-family: 'Montserrat', 'CustomEmoji', sans-serif;
+}
+
+/* Global tooltip customization for ngx-charts v20+ */
+ngx-tooltip-content.ngx-charts-tooltip-content.type-tooltip {
+  background-color: #04838f !important;
+  color: white !important;
+  text-align: center;
+  padding: 6px 10px;
+  border-radius: 6px;
+  font-size: 14px;
+  line-height: 1.4;
+  white-space: nowrap;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
+
+  .tooltip-caret.position-top {
+    border-top-color: #04838f !important;
+    box-shadow: 0 6px 20px 0 rgba(0, 0, 0, 0.2);
+  }
+}

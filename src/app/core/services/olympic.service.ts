@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject, EMPTY, Observable } from 'rxjs';
 import { catchError, map, tap } from 'rxjs/operators';
 import { OlympicCountry } from '../models/Olympic';
 
@@ -10,9 +10,9 @@ import { OlympicCountry } from '../models/Olympic';
 export class OlympicService {
   private olympicUrl = './assets/mock/olympic.json';
   // BehaviorSubject holds:
-  // - undefined: data has not been loaded yet
-  // - null: an error occurred while loading data
-  // - OlympicCountry[]: successfully loaded data
+  // - undefined: data not loaded yet
+  // - null: error loading data
+  // - OlympicCountry[]: loaded data
   private olympics$ = new BehaviorSubject<OlympicCountry[] | null | undefined>(undefined);
 
   constructor(private http: HttpClient) {}
@@ -23,10 +23,11 @@ export class OlympicService {
   loadInitialData(): Observable<OlympicCountry[]> {
     return this.http.get<OlympicCountry[]>(this.olympicUrl).pipe(
       tap((value) => this.olympics$.next(value)),
-      catchError((error, caught) => {
+      catchError((error) => {
         console.error('Failed to load Olympic data:', error);
-        this.olympics$.next(null);
-        return caught; // Pass the error along
+        this.olympics$.next(null); // update the BehaviorSubject for subscribers
+        // Observable completes immediately, no error is propagated to subscribers
+        return EMPTY;
       })
     );
   }
