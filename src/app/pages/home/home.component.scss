@@ -1,3 +1,71 @@
+// Title bar styling for section header ("Medals per Country")
+.title-box {
+  display: inline-block;
+  background-color: #04838f;
+  color: white;
+  font-size: 1.5rem;
+  font-weight: normal;
+  padding: 8px 16px;
+  border-radius: 8px; // matches stat-box corners for consistency
+  text-align: center;
+  display: block;
+  width: fit-content;
+  // Equal spacing above and below the title for consistent vertical gaps
+  margin: 24px auto;
+}
+
+// Wrapper for the two summary boxes ("Number of Games", "Number of Countries")
+.stats-container {
+  display: flex;
+  justify-content: center; // centers both boxes horizontally
+  align-items: center;
+  flex-wrap: nowrap; // ensures boxes stay side by side
+  gap: 2rem; // fixed spacing between boxes
+  margin: 24px 0; // matches .title-box top/bottom spacing
+}
+
+// Individual summary boxes
+.stat-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+
+  background-color: #fff;
+  border: 2px solid #04838f;
+  border-radius: 8px; // matches title-box rounding
+  padding: 6px 16px; // compact fit around text
+
+  .stat-label {
+    font-size: 1rem;
+    color: #555; // medium-dark grey for subdued text
+    margin-bottom: 0.2rem;
+  }
+
+  .stat-value {
+    font-size: 1rem; // same size as label text
+    font-weight: bold; // emphasis without increasing size
+    color: #222; // slightly darker for readability contrast
+  }
+}
+
+.chart-container {
+  display: flex;
+  justify-content: center;  // horizontally centers the chart
+  width: 100%;
+}
+
+// Compensate for internal padding of chart SVG
+::ng-deep ngx-charts-pie-chart svg {
+  margin-top: -50px;   // adjust upward
+}
+
+// Customize pie chart label font size
+::ng-deep .pie-label {
+  font-size: 1rem !important;
+}
+
+// Slightly thickens the pie chart leader lines for better visibility
 ::ng-deep .pie-label-line {
-  stroke-width: 2px; // default is 1px
+  stroke-width: 2px;
 }

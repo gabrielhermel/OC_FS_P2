@@ -1,0 +1,27 @@
+.app-header {
+  text-align: center;
+  padding: 16px 0;
+  background-color: #04838f;
+
+  h1 {
+    font-weight: normal; // not bold
+    color: white;
+    margin: 0 0 16px 0;
+  }
+
+  nav {
+    button.home-button {
+      background-color: #04838f;
+      color: white;
+      border: 1px solid white;
+      border-radius: 6px;
+      padding: 6px 12px;
+      cursor: pointer;
+      font-size: 14px;
+
+      &:active {
+        background-color: lighten(#04838f, 10%); // slightly lighter on click
+      }
+    }
+  }
+}

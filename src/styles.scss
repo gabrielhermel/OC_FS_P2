@@ -14,6 +14,13 @@
   unicode-range: U+E001; /* Only applies to glyph at E001 */
 }
 
+html, body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+}
+
 body, ngx-tooltip-content.ngx-charts-tooltip-content.type-tooltip {
   font-family: 'Montserrat', 'CustomEmoji', sans-serif;
 }

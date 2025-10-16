@@ -37,7 +37,7 @@ export class OlympicService {
     return this.olympics$.asObservable();
   }
 
-  // Returns an observable that emits two arrays: country names and their total medal counts
+  // Returns observable that emits two arrays: country names and their total medal counts
   getTotalMedalsByCountry(): Observable<{ countryNames: string[]; countryTotalMedals: number[] }> {
     return this.getOlympics().pipe(
       map((list) => {
@@ -62,4 +62,26 @@ export class OlympicService {
       })
     );
   }
+
+// Returns observable with total number of games (unique years) and total number of countries
+getGlobalStats(): Observable<{ totalGames: number; totalCountries: number }> {
+  return this.getOlympics().pipe(
+    map((list) => {
+      if (!list) return { totalGames: 0, totalCountries: 0 };
+
+      // Total countries: number of entries in list
+      const totalCountries = list.length;
+
+      // Collect all years from all countries’ participations
+      const allYears = list.flatMap((country) =>
+        country.participations.map((p) => p.year)
+      );
+
+      // Use Set to count unique years
+      const totalGames = new Set(allYears).size;
+
+      return { totalGames, totalCountries };
+    })
+  );
+}
 }

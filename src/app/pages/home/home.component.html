@@ -1,14 +1,34 @@
-<h2>Olympic games app</h2>
-<hr />
 <p *ngIf="(olympics$ | async) === null">Error loading olympics data!</p>
-<ngx-charts-pie-chart
-  [results]="chartData$ | async"
-  [view]="[400, 400]"
-  [legend]="false"
-  [labels]="true"
-  [doughnut]="false"
-  [explodeSlices]="false"
-  [gradient]="false"
-  [scheme]="colorScheme"
-  [tooltipText]="formatTooltip"
-></ngx-charts-pie-chart>
+
+<div class="title-box">
+  Medals per Country
+</div>
+
+<!-- Stats section -->
+<div class="stats-container" *ngIf="globalStats$ | async as stats">
+  <div class="stat-box">
+    <div class="stat-label">Number of Games</div>
+    <div class="stat-value">{{ stats.totalGames }}</div>
+  </div>
+  <div class="stat-box">
+    <div class="stat-label">Number of Countries</div>
+    <div class="stat-value">{{ stats.totalCountries }}</div>
+  </div>
+</div>
+
+<!-- Pie chart -->
+<div class="chart-container">
+  <ngx-charts-pie-chart
+    [results]="chartData$ | async"
+    [view]="chartView"
+    [legend]="false"
+    [labels]="true"
+    [doughnut]="false"
+    [explodeSlices]="false"
+    [gradient]="false"
+    [scheme]="colorScheme"
+    [labelFormatting]="labelFormatting"
+    [trimLabels]="false"
+    [tooltipText]="formatTooltip"
+  ></ngx-charts-pie-chart>
+</div>
