@@ -1,34 +1,42 @@
-<p *ngIf="(olympics$ | async) === null">Error loading olympics data!</p>
-
-<div class="title-box">
-  Medals per Country
+<!-- Spinner while loading -->
+<div *ngIf="loading" class="spinner-container">
+  <div class="simple-spinner"></div>
 </div>
 
-<!-- Stats section -->
-<div class="stats-container" *ngIf="globalStats$ | async as stats">
-  <div class="stat-box">
-    <div class="stat-label">Number of Games</div>
-    <div class="stat-value">{{ stats.totalGames }}</div>
-  </div>
-  <div class="stat-box">
-    <div class="stat-label">Number of Countries</div>
-    <div class="stat-value">{{ stats.totalCountries }}</div>
-  </div>
+<!-- Error message if loading fails -->
+<div *ngIf="loadError" class="error-message">
+  An error has occurred. Please try again.
 </div>
 
-<!-- Pie chart -->
-<div class="chart-container">
-  <ngx-charts-pie-chart
-    [results]="chartData$ | async"
-    [view]="chartView"
-    [legend]="false"
-    [labels]="true"
-    [doughnut]="false"
-    [explodeSlices]="false"
-    [gradient]="false"
-    [scheme]="colorScheme"
-    [labelFormatting]="labelFormatting"
-    [trimLabels]="false"
-    [tooltipText]="formatTooltip"
-  ></ngx-charts-pie-chart>
+<!-- Page content when data is ready -->
+<div *ngIf="!loading && !loadError">
+  <div class="title-box">Medals per Country</div>
+  <!-- Stats section -->
+  <div class="stats-container">
+    <div class="stat-box">
+      <div class="stat-label">Number of Games</div>
+      <div class="stat-value">{{ globalStats.totalGames }}</div>
+    </div>
+    <div class="stat-box">
+      <div class="stat-label">Number of Countries</div>
+      <div class="stat-value">{{ globalStats.totalCountries }}</div>
+    </div>
+  </div>
+  <!-- Pie chart -->
+  <div class="chart-container">
+    <ngx-charts-pie-chart
+      [results]="chartData"
+      [view]="chartView"
+      [legend]="false"
+      [labels]="true"
+      [doughnut]="false"
+      [explodeSlices]="false"
+      [gradient]="false"
+      [scheme]="colorScheme"
+      [labelFormatting]="labelFormatting"
+      [trimLabels]="false"
+      [tooltipText]="formatTooltip"
+      (select)="onSliceSelect($event)">
+    </ngx-charts-pie-chart>
+  </div>
 </div>

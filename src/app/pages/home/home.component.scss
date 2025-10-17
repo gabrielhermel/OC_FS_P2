@@ -57,7 +57,7 @@
 
 // Compensate for internal padding of chart SVG
 ::ng-deep ngx-charts-pie-chart svg {
-  margin-top: -50px;   // adjust upward
+  margin-top: -60px;   // adjust upward
 }
 
 // Customize pie chart label font size

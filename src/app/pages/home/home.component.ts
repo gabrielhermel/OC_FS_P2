@@ -1,8 +1,8 @@
-import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Color, ScaleType } from '@swimlane/ngx-charts';
-import { map, Observable, of } from 'rxjs';
 import { OlympicCountry } from 'src/app/core/models/Olympic';
 import { OlympicService } from 'src/app/core/services/olympic.service';
+import { Router } from '@angular/router';
 
 
 @Component({
@@ -10,25 +10,13 @@ import { OlympicService } from 'src/app/core/services/olympic.service';
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss'],
 })
-export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
-
-  // Observable for the raw Olympics data initially set to undefined
-  olympics$: Observable<OlympicCountry[] | null | undefined> = of(undefined);
-
-  // Observable for total games and total countries
-  globalStats$ = this.olympicService.getGlobalStats();
-
-  // Chart data Observable in ngx-charts format
-  chartData$: Observable<{ name: string; value: number }[]> = this.olympicService
-    .getTotalMedalsByCountry()
-    .pipe(
-      map(({ countryNames, countryTotalMedals }) =>
-        countryNames.map((name, i) => ({ name, value: countryTotalMedals[i] }))
-      )
-    );
-
+export class HomeComponent implements OnInit, OnDestroy {
+  // Minimum chart edge length
+  private readonly MIN_CHART_SIZE = 300;
+  // Reference to resize handler to remove it on destroy
+  private readonly resizeListener = () => this.updateChartSize();
   // Chart color palette (first six custom, rest auto-generated)
-  colorScheme: Color = {
+  readonly colorScheme: Color = {
     name: 'customScheme',
     selectable: true,
     group: ScaleType.Ordinal,
@@ -41,30 +29,26 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
       '#89A1DB', // vista-blue
     ],
   };
-  
+
+  // Will hold list of raw olympics data
+  olympics: OlympicCountry[] = [];
+  // Flags for loading status
+  loading: boolean = true;
+  loadError: boolean = false;
+  // Object to hold total games and total countries
+  globalStats: { totalGames: number; totalCountries: number } = { totalGames: 0, totalCountries: 0 };
+  // Will hold chart data in ngx-charts format
+  chartData: { name: string; value: number }[] = [];
   // Holds chart size
-  chartView: [number, number] = [300, 300];
+  chartView: [number, number] = [this.MIN_CHART_SIZE, this.MIN_CHART_SIZE];
 
-  // Reference to resize handler to remove it on destroy
-  private readonly resizeListener = () => this.updateChartSize();
-
-  constructor(private olympicService: OlympicService) {}
+  constructor(private olympicService: OlympicService, private router: Router) {}
 
   ngOnInit(): void {
-    // Initialize data fetching
-    // No unsubscribe needed: HttpClient observables complete automatically
-    this.olympicService.loadInitialData().subscribe();
-
-    // Keep observable reference
-    this.olympics$ = this.olympicService.getOlympics();
-
-    // Listen for window resize events and recalculate chart dimensions
+    // Fetch and format data, update loading status
+    this.loadData();
+    // Listen for window resize events to recalculate chart dimensions
     window.addEventListener('resize', this.resizeListener);
-  }
-
-  ngAfterViewInit(): void {
-    // Wait until first tick after view is fully rendered before setting initial chart size
-    setTimeout(() => this.updateChartSize(), 0);
   }
 
   ngOnDestroy(): void {
@@ -72,6 +56,40 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
     window.removeEventListener('resize', this.resizeListener);
   }
 
+  private loadData(): void {
+    // Reset flags
+    this.loading = true;
+    this.loadError = false;
+    // No unsubscribe needed: HttpClient observables complete automatically
+    this.olympicService.getOlympics().subscribe({
+      // Data returned successfully
+      next: (data) => {
+        // Assign response to local member
+        this.olympics = data;
+        // Set flag that loading has finished
+        this.loading = false;
+        // Parse and store global stats (total games, total countries)
+        this.globalStats = this.olympicService.getGlobalStats(data);
+        // Parse and hold data to be used in pie chart
+        const { countryNames, countryTotalMedals } = this.olympicService.getTotalMedalsByCountry(data);
+        // Format chart data and store in member
+        this.chartData = countryNames.map((name, i) => ({
+          name,
+          value: countryTotalMedals[i],
+        }));
+        // Defer setting initial chart size until first tick after view is rendered
+        setTimeout(() => this.updateChartSize(), 0);
+      },
+      // Data failed to load
+      error: () => {
+        // Set flags to show error to user
+        this.loading = false;
+        this.loadError = true;
+      },
+    });
+  }
+
+  // Add medal glyph to tooltips
   formatTooltip({ data }: any): string {
     return `${data.name}<br>\uE001${data.value}`; // \uE001 is the medal glyph
   }
@@ -94,11 +112,16 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
     const remainVisibVertSpace = window.innerHeight - (statsContainerBottBord + statsContainerBottMarg);
 
     // Keeps chart square by using smaller of page width vs remaining vertical space
-    // Scale to 80% of available space, rounded to prevent subpixel values
-    // Enforces minimum of 300px
-    const chartEdgeLenPx = Math.max(Math.floor(Math.min(window.innerWidth, remainVisibVertSpace)), 300);
+    // Available space value rounded to prevent subpixel values
+    // Enforces minimum size
+    const chartEdgeLenPx = Math.max(Math.floor(Math.min(window.innerWidth, remainVisibVertSpace)), this.MIN_CHART_SIZE);
 
     // ngx-charts expects an array [width, height]
     this.chartView = [chartEdgeLenPx, chartEdgeLenPx];
+  }
+
+  onSliceSelect(event: any): void {
+    console.log('Clicked slice:', event.name);
+    this.router.navigate(['/details', event.name]);
   }
 }
