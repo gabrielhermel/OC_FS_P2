@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { throwError } from 'rxjs';
-import { catchError, delay } from 'rxjs/operators';
+import { catchError } from 'rxjs/operators';
 import { OlympicCountry } from '../models/Olympic';
 
 @Injectable({
@@ -51,5 +51,15 @@ export class OlympicService {
     // Use Set to count unique years
     const totalGames = new Set(allYears).size;
     return { totalGames, totalCountries };
+  }
+
+  // Build a lookup object mapping each country's name to its ID
+  getIdsByName(olympics: OlympicCountry[]) {
+    // Reduce the list of countries into an object with name–ID pairs
+    return olympics.reduce((acc, country) => {
+      // Add the current country's name as a key and its ID as the value
+      acc[country.country] = country.id;
+      return acc;
+    }, {} as Record<string, number>);
   }
 }

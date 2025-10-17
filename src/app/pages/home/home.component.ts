@@ -41,6 +41,8 @@ export class HomeComponent implements OnInit, OnDestroy {
   chartData: { name: string; value: number }[] = [];
   // Holds chart size
   chartView: [number, number] = [this.MIN_CHART_SIZE, this.MIN_CHART_SIZE];
+  // Lookup object mapping country names to their IDs
+  countryIdsByName: Record<string, number> = {};
 
   constructor(private olympicService: OlympicService, private router: Router) {}
 
@@ -77,6 +79,8 @@ export class HomeComponent implements OnInit, OnDestroy {
           name,
           value: countryTotalMedals[i],
         }));
+        // Populate lookup obj to get country ids by their names
+        this.countryIdsByName = this.olympicService.getIdsByName(data);
         // Defer setting initial chart size until first tick after view is rendered
         setTimeout(() => this.updateChartSize(), 0);
       },
@@ -120,8 +124,11 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.chartView = [chartEdgeLenPx, chartEdgeLenPx];
   }
 
+  // Handle selection of pie slice to navigate to corresponding details page
   onSliceSelect(event: any): void {
-    console.log('Clicked slice:', event.name);
-    this.router.navigate(['/details', event.name]);
+    // Use country name from event to find its ID
+    const countryId = this.countryIdsByName[event.name];
+    // Navigate to details page for selected country
+    this.router.navigate(['/details', countryId]);
   }
 }
