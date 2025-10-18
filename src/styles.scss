@@ -36,8 +36,21 @@ ngx-tooltip-content.ngx-charts-tooltip-content.type-tooltip {
   line-height: 1.4;
   white-space: nowrap;
 
+    /* Tooltip carets (arrows) */
   .tooltip-caret.position-top {
     border-top-color: #04838f !important;
+  }
+
+  .tooltip-caret.position-bottom {
+    border-bottom-color: #04838f !important;
+  }
+
+  .tooltip-caret.position-left {
+    border-left-color: #04838f !important;
+  }
+
+  .tooltip-caret.position-right {
+    border-right-color: #04838f !important;
   }
 }
 

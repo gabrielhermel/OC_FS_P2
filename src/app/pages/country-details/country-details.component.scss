@@ -47,17 +47,26 @@
   }
 }
 
-/* Center placeholder (for now) */
-.chart-placeholder {
-  text-align: center;
-  margin-top: 24px;
+// Line style: 2px thick
+::ng-deep ngx-charts-line-chart g.line-series path {
+  stroke-width: 2px !important;
 }
 
-.pretty {
-  background: #f6f6f6;
-  padding: 12px;
-  border-radius: 6px;
-  font-size: 0.9rem;
-  width: fit-content;
-  margin: 0 auto;
+// Black grid lines
+::ng-deep .gridline-path {
+  stroke: #000 !important;
+  opacity: 0.5; // Smoothing
+}
+
+// Tick labels (numbers on axes)
+::ng-deep .tick text {
+  font-size: 0.8rem !important;
+  fill: #222 !important;
+}
+
+// X-axis label ("Dates")
+::ng-deep ngx-charts-line-chart g[ngx-charts-axis-label] text {
+  fill: #777 !important;
+  font-size: 1.5rem !important;
+  font-weight: normal !important;
 }

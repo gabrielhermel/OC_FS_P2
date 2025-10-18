@@ -36,12 +36,16 @@
       [view]="[600, 400]"
       [xAxis]="true"
       [yAxis]="true"
-      [xAxisLabel]="'Year'"
-      [yAxisLabel]="'Medals'"
+      [yScaleMin]="yScaleMin"
+      [yScaleMax]="yScaleMax"
       [showXAxisLabel]="true"
-      [showYAxisLabel]="true"
+      [showYAxisLabel]="false"
+      [xAxisLabel]="'Dates'"
       [showGridLines]="true"
       [roundDomains]="true"
+      [animations]="false"
+      [autoScale]="true"
+      [scheme]="colorScheme"
     >
     </ngx-charts-line-chart>
   </div>

@@ -1,5 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { Color, ScaleType } from '@swimlane/ngx-charts';
 import { Subscription } from 'rxjs';
 import { CountryDetails } from 'src/app/core/models/CountryDetails';
 import { OlympicService } from 'src/app/core/services/olympic.service';
@@ -23,10 +24,22 @@ export class CountryDetailsComponent implements OnInit, OnDestroy {
 
   // Holds data returned by olympics service (stays null if not found)
   details: CountryDetails | null = null;
+  
+  // Hold chart y-axis min and max values
+  yScaleMin: number = 0;
+  yScaleMax: number = 0;
 
   // Keep ref to unsubscribe manually
   // Not really needed for HttpClient, but good practice
   private detailsSub?: Subscription;
+
+  // Custom single-line color scheme for chart
+  readonly colorScheme: Color = {
+    name: 'singleLine',
+    selectable: false,
+    group: ScaleType.Ordinal,
+    domain: ['#793D52'],
+  };
 
   constructor(private route: ActivatedRoute, private olympicService: OlympicService) {}
 
@@ -57,6 +70,15 @@ export class CountryDetailsComponent implements OnInit, OnDestroy {
         // Store details
         this.details = details;
 
+        // Get max and min medal values for chart y-axis
+        const medalValues = this.details.medalHistory.map((p) => p.value);
+        const minVal = Math.min(...medalValues);
+        const maxVal = Math.max(...medalValues);
+        // Add 5% padding above and below
+        const padding = (maxVal - minVal) * 0.05;
+        this.yScaleMin = Math.max(0, minVal - padding);
+        this.yScaleMax = maxVal + padding;
+
         // Turn loading off
         this.loading = false;
         this.loadError = false;
@@ -73,5 +95,10 @@ export class CountryDetailsComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     //  Unsubscribing not required for HttpClient, but good pattern to have in place
     this.detailsSub?.unsubscribe();
+  }
+
+  // Tooltip format for line chart: show year and medal count with glyph
+  formatTooltip({ name, value }: any): string {
+    return `${name}<br>\uE001 ${value}`;
   }
 }
