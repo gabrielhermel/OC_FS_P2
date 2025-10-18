@@ -138,4 +138,19 @@ export class HomeComponent implements OnInit, OnDestroy {
     // Navigate to details page for selected country
     this.router.navigate(['/details', countryId]);
   }
+
+  // Handle clicks on chart labels (which don't emit select events)
+  onChartClick(event: MouseEvent): void {
+    const target = event.target as SVGTextElement | null;
+
+    // Only react if the clicked element is a chart label
+    if (target?.tagName.toLowerCase() === 'text' && target.textContent) {
+      const countryName = target.textContent.trim();
+      const countryId = this.countryIdsByName[countryName];
+
+      if (countryId) {
+        this.router.navigate(['/details', countryId]);
+      }
+    }
+  }
 }

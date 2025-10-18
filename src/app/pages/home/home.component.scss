@@ -63,6 +63,7 @@
 // Customize pie chart label font size
 ::ng-deep .pie-label {
   font-size: 1rem !important;
+  cursor: pointer;
 }
 
 // Slightly thickens the pie chart leader lines for better visibility

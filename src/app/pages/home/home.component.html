@@ -23,7 +23,7 @@
     </div>
   </div>
   <!-- Pie chart -->
-  <div class="chart-container">
+  <div class="chart-container" (click)="onChartClick($event)">
     <ngx-charts-pie-chart
       [results]="chartData"
       [view]="chartView"
