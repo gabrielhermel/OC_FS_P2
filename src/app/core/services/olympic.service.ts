@@ -1,8 +1,9 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { throwError } from 'rxjs';
-import { catchError } from 'rxjs/operators';
+import { Observable, throwError } from 'rxjs';
+import { catchError, map } from 'rxjs/operators';
 import { OlympicCountry } from '../models/Olympic';
+import { CountryDetails } from '../models/CountryDetails';
 
 @Injectable({
   providedIn: 'root',
@@ -61,5 +62,51 @@ export class OlympicService {
       acc[country.country] = country.id;
       return acc;
     }, {} as Record<string, number>);
+  }
+
+  // Return all relevant stats for a single country identified by its ID
+  getCountryDetailsById(id: number): Observable<CountryDetails | null> {
+    // Observable completes after the HTTP request responds
+    return this.http.get<OlympicCountry[]>(this.olympicUrl).pipe(
+      // Transform the full list into the single country's details
+      map((olympics) => {
+        // Get the country that matches the provided ID
+        const country = olympics.find((c) => c.id === id);
+        // If no country matches the ID
+        if (!country) return null;
+        // Total number of participations (years) for this country
+        const participationCount = country.participations.length;
+        // Get sum of medals over all participations
+        const totalMedals = country.participations.reduce(
+          (sum, p) => sum + (p.medalsCount ?? 0),
+          0
+        );
+        // Get sum of athletes over all participations
+        const totalAthletes = country.participations.reduce(
+          (sum, p) => sum + (p.athleteCount ?? 0),
+          0
+        );
+        // Create object with year and medals per participation,
+        // suitable for ngx-charts line chart
+        const medalHistory = country.participations.map((p) => ({
+          name: p.year.toString(),
+          value: p.medalsCount ?? 0,
+        }));
+
+        // Return structured country details
+        return {
+          name: country.country,
+          participationCount: participationCount,
+          totalMedals: totalMedals,
+          totalAthletes: totalAthletes,
+          medalHistory: medalHistory,
+        };
+      }),
+      // Handle HTTP request errors
+      catchError((error) => {
+        console.error('Failed to load country details:', error);
+        return throwError(() => error);
+      })
+    );
   }
 }

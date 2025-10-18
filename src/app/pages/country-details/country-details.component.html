@@ -1,2 +1,22 @@
-<h2>Country Details</h2>
-<p>Currently viewing details for country ID: {{ countryId }}</p>
+<!-- Spinner while loading -->
+<div *ngIf="loading" class="spinner-container">
+  <div class="simple-spinner"></div>
+</div>
+
+<!-- Error message -->
+<div *ngIf="loadError" class="error-message">
+  {{ errorMessage }}
+</div>
+
+<div *ngIf="!loading && !loadError && details">
+  <h2>{{ details.name }} — Country Details</h2>
+  <div>
+    <div><strong>Participations:</strong> {{ details.participationCount }}</div>
+    <div><strong>Total Medals:</strong> {{ details.totalMedals }}</div>
+    <div><strong>Total Athletes:</strong> {{ details.totalAthletes }}</div>
+  </div>
+
+  <!-- Medal history as pretty-printed JSON (quick test output) -->
+  <h3>Medal History (for chart):</h3>
+  <pre>{{ details.medalHistory | json }}</pre>
+</div>

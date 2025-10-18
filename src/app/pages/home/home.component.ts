@@ -3,6 +3,7 @@ import { Color, ScaleType } from '@swimlane/ngx-charts';
 import { OlympicCountry } from 'src/app/core/models/Olympic';
 import { OlympicService } from 'src/app/core/services/olympic.service';
 import { Router } from '@angular/router';
+import { Subscription } from 'rxjs';
 
 
 @Component({
@@ -32,6 +33,9 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   // Will hold list of raw olympics data
   olympics: OlympicCountry[] = [];
+  // Keep ref to unsubscribe manually
+  // Not really needed for HttpClient, but good practice
+  private olympicsSub?: Subscription;
   // Flags for loading status
   loading: boolean = true;
   loadError: boolean = false;
@@ -56,14 +60,17 @@ export class HomeComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     // Remove event listeners to prevent memory leaks
     window.removeEventListener('resize', this.resizeListener);
+    //  Unsubscribing not required for HttpClient, but good pattern to have in place
+    this.olympicsSub?.unsubscribe();
   }
 
   private loadData(): void {
     // Reset flags
     this.loading = true;
     this.loadError = false;
-    // No unsubscribe needed: HttpClient observables complete automatically
-    this.olympicService.getOlympics().subscribe({
+    // Save ref to subscription
+    // No unsubscribe actually needed: HttpClient observables complete automatically
+    this.olympicsSub = this.olympicService.getOlympics().subscribe({
       // Data returned successfully
       next: (data) => {
         // Assign response to local member
