@@ -1,4 +1,3 @@
-import { CommonModule, JsonPipe } from '@angular/common'; // Remove after testing template with json pipe
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
@@ -8,9 +7,7 @@ import { OlympicService } from 'src/app/core/services/olympic.service';
 @Component({
   selector: 'app-country-details',
   templateUrl: './country-details.component.html',
-  styleUrl: './country-details.component.scss',
-  standalone: true, // Remove after testing template with json pipe
-  imports: [ JsonPipe, CommonModule ] // Remove after testing template with json pipe
+  styleUrl: './country-details.component.scss'
 })
 export class CountryDetailsComponent implements OnInit, OnDestroy {
   // UI state flags
@@ -29,7 +26,7 @@ export class CountryDetailsComponent implements OnInit, OnDestroy {
 
   // Keep ref to unsubscribe manually
   // Not really needed for HttpClient, but good practice
-  private countryDetailsSub?: Subscription;
+  private detailsSub?: Subscription;
 
   constructor(private route: ActivatedRoute, private olympicService: OlympicService) {}
 
@@ -46,7 +43,7 @@ export class CountryDetailsComponent implements OnInit, OnDestroy {
     }
 
     // Create observable that fetches a single country's detail object
-    this.countryDetailsSub = this.olympicService.getCountryDetailsById(this.countryId).subscribe({
+    this.detailsSub = this.olympicService.getCountryDetailsById(this.countryId).subscribe({
       // HTTP request successful
       next: (details) => {
         // If no country was found matching the id parameter set flags and show error
@@ -75,6 +72,6 @@ export class CountryDetailsComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     //  Unsubscribing not required for HttpClient, but good pattern to have in place
-    this.countryDetailsSub?.unsubscribe();
+    this.detailsSub?.unsubscribe();
   }
 }

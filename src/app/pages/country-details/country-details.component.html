@@ -8,15 +8,41 @@
   {{ errorMessage }}
 </div>
 
+<!-- Page content -->
 <div *ngIf="!loading && !loadError && details">
-  <h2>{{ details.name }} — Country Details</h2>
-  <div>
-    <div><strong>Participations:</strong> {{ details.participationCount }}</div>
-    <div><strong>Total Medals:</strong> {{ details.totalMedals }}</div>
-    <div><strong>Total Athletes:</strong> {{ details.totalAthletes }}</div>
+  <!-- Country name title box -->
+  <div class="title-box">{{ details.name }}</div>
+
+  <!-- Stats section -->
+  <div class="stats-container">
+    <div class="stat-box">
+      <div class="stat-label">Number of Entries</div>
+      <div class="stat-value">{{ details.participationCount }}</div>
+    </div>
+    <div class="stat-box">
+      <div class="stat-label">Total Medals</div>
+      <div class="stat-value">{{ details.totalMedals }}</div>
+    </div>
+    <div class="stat-box">
+      <div class="stat-label">Total Athletes</div>
+      <div class="stat-value">{{ details.totalAthletes }}</div>
+    </div>
   </div>
 
-  <!-- Medal history as pretty-printed JSON (quick test output) -->
-  <h3>Medal History (for chart):</h3>
-  <pre>{{ details.medalHistory | json }}</pre>
+  <!-- Line chart for medal history -->
+  <div class="chart-container" *ngIf="details.medalHistory?.length">
+    <ngx-charts-line-chart
+      [results]="[{ name: details.name, series: details.medalHistory }]"
+      [view]="[600, 400]"
+      [xAxis]="true"
+      [yAxis]="true"
+      [xAxisLabel]="'Year'"
+      [yAxisLabel]="'Medals'"
+      [showXAxisLabel]="true"
+      [showYAxisLabel]="true"
+      [showGridLines]="true"
+      [roundDomains]="true"
+    >
+    </ngx-charts-line-chart>
+  </div>
 </div>

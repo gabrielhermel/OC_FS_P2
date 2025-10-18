@@ -1,0 +1,63 @@
+// Title bar styling for country name
+.title-box {
+  display: block;
+  background-color: #04838f;
+  color: white;
+  font-size: 1.5rem;
+  font-weight: normal;
+  padding: 8px 16px;
+  border-radius: 8px;
+  text-align: center;
+  width: fit-content;
+  margin: 24px auto;
+}
+
+// Wrapper for the three stats boxes
+.stats-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: nowrap;
+  gap: 1rem;
+  margin: 24px 0;
+}
+
+// Individual stat boxes
+.stat-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+
+  background-color: #fff;
+  border: 2px solid #04838f;
+  border-radius: 8px;
+  padding: 6px 16px;
+
+  .stat-label {
+    font-size: 1rem;
+    color: #555;
+    margin-bottom: 0.2rem;
+  }
+
+  .stat-value {
+    font-size: 1rem;
+    font-weight: bold;
+    color: #222;
+  }
+}
+
+/* Center placeholder (for now) */
+.chart-placeholder {
+  text-align: center;
+  margin-top: 24px;
+}
+
+.pretty {
+  background: #f6f6f6;
+  padding: 12px;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  width: fit-content;
+  margin: 0 auto;
+}
