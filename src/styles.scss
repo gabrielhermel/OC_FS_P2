@@ -1,28 +1,30 @@
 /* Main app font */
 @font-face {
-  font-family: 'Montserrat';
-  src: url('/assets/fonts/Montserrat.ttf') format('truetype');
+  font-family: "Montserrat";
+  src: url("/assets/fonts/Montserrat.ttf") format("truetype");
   font-weight: 100 900;
   font-display: swap;
 }
 
 /* Custom emoji font for private-use glyphs */
 @font-face {
-  font-family: 'CustomEmoji';
-  src: url('/assets/fonts/custom_emoji_font.woff') format('woff');
+  font-family: "CustomEmoji";
+  src: url("/assets/fonts/custom_emoji_font.woff") format("woff");
   font-display: swap;
   unicode-range: U+E001; /* Only applies to glyph at E001 */
 }
 
-html, body {
+html,
+body {
   margin: 0;
   padding: 0;
   width: 100%;
   height: 100%;
 }
 
-body, ngx-tooltip-content.ngx-charts-tooltip-content.type-tooltip {
-  font-family: 'Montserrat', 'CustomEmoji', sans-serif;
+body,
+ngx-tooltip-content.ngx-charts-tooltip-content.type-tooltip {
+  font-family: "Montserrat", "CustomEmoji", sans-serif;
 }
 
 /* Global tooltip customization for ngx-charts v20+ */
@@ -36,7 +38,7 @@ ngx-tooltip-content.ngx-charts-tooltip-content.type-tooltip {
   line-height: 1.4;
   white-space: nowrap;
 
-    /* Tooltip carets (arrows) */
+  /* Tooltip carets (arrows) */
   .tooltip-caret.position-top {
     border-top-color: #04838f !important;
   }
@@ -90,6 +92,10 @@ ngx-tooltip-content.ngx-charts-tooltip-content.type-tooltip {
 
 /* Keyframes for spinner rotation */
 @keyframes spin {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
 }

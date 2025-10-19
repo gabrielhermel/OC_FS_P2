@@ -5,7 +5,6 @@ import { OlympicService } from 'src/app/core/services/olympic.service';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 
-
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
@@ -40,7 +39,10 @@ export class HomeComponent implements OnInit, OnDestroy {
   loading: boolean = true;
   loadError: boolean = false;
   // Object to hold total games and total countries
-  globalStats: { totalGames: number; totalCountries: number } = { totalGames: 0, totalCountries: 0 };
+  globalStats: { totalGames: number; totalCountries: number } = {
+    totalGames: 0,
+    totalCountries: 0,
+  };
   // Will hold chart data in ngx-charts format
   chartData: { name: string; value: number }[] = [];
   // Holds chart size
@@ -80,7 +82,8 @@ export class HomeComponent implements OnInit, OnDestroy {
         // Parse and store global stats (total games, total countries)
         this.globalStats = this.olympicService.getGlobalStats(data);
         // Parse and hold data to be used in pie chart
-        const { countryNames, countryTotalMedals } = this.olympicService.getTotalMedalsByCountry(data);
+        const { countryNames, countryTotalMedals } =
+          this.olympicService.getTotalMedalsByCountry(data);
         // Format chart data and store in member
         this.chartData = countryNames.map((name, i) => ({
           name,
@@ -112,20 +115,28 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   private updateChartSize(): void {
     // Last element above pie chart
-    const statsContainer = document.querySelector('.stats-container') as HTMLElement | null;
+    const statsContainer = document.querySelector(
+      '.stats-container'
+    ) as HTMLElement | null;
 
     // Safety check
     if (!statsContainer) return;
 
     // Find remaining visible vertical space under stats container
-    const statsContainerBottBord = statsContainer.getBoundingClientRect().bottom;
-    const statsContainerBottMarg = parseFloat(getComputedStyle(statsContainer).marginBottom) || 0;
-    const remainVisibVertSpace = window.innerHeight - (statsContainerBottBord + statsContainerBottMarg);
+    const statsContainerBottBord =
+      statsContainer.getBoundingClientRect().bottom;
+    const statsContainerBottMarg =
+      parseFloat(getComputedStyle(statsContainer).marginBottom) || 0;
+    const remainVisibVertSpace =
+      window.innerHeight - (statsContainerBottBord + statsContainerBottMarg);
 
     // Keeps chart square by using smaller of page width vs remaining vertical space
     // Available space value rounded to prevent subpixel values
     // Enforces minimum size
-    const chartEdgeLenPx = Math.max(Math.floor(Math.min(window.innerWidth, remainVisibVertSpace)), this.MIN_CHART_SIZE);
+    const chartEdgeLenPx = Math.max(
+      Math.floor(Math.min(window.innerWidth, remainVisibVertSpace)),
+      this.MIN_CHART_SIZE
+    );
 
     // ngx-charts expects an array [width, height]
     this.chartView = [chartEdgeLenPx, chartEdgeLenPx];

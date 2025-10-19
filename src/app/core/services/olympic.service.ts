@@ -48,7 +48,9 @@ export class OlympicService {
     // Total countries: number of entries in list
     const totalCountries = olympics.length;
     // Collect all years from all countries’ participations
-    const allYears = olympics.flatMap((c) => c.participations.map((p) => p.year));
+    const allYears = olympics.flatMap((c) =>
+      c.participations.map((p) => p.year)
+    );
     // Use Set to count unique years
     const totalGames = new Set(allYears).size;
     return { totalGames, totalCountries };

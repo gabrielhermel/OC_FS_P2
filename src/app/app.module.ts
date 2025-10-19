@@ -9,13 +9,15 @@ import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { CountryDetailsComponent } from './pages/country-details/country-details.component';
 
-
 @NgModule({
-  declarations: [AppComponent, HomeComponent, NotFoundComponent, CountryDetailsComponent],
-  imports: [BrowserModule, AppRoutingModule, HttpClientModule, NgxChartsModule],
-  providers: [
-    provideAnimationsAsync()
+  declarations: [
+    AppComponent,
+    HomeComponent,
+    NotFoundComponent,
+    CountryDetailsComponent,
   ],
+  imports: [BrowserModule, AppRoutingModule, HttpClientModule, NgxChartsModule],
+  providers: [provideAnimationsAsync()],
   bootstrap: [AppComponent],
 })
 export class AppModule {}
