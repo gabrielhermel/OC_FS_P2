@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Color, ScaleType } from '@swimlane/ngx-charts';
 import { Subscription } from 'rxjs';
@@ -10,7 +10,7 @@ import { OlympicService } from 'src/app/core/services/olympic.service';
   templateUrl: './country-details.component.html',
   styleUrl: './country-details.component.scss'
 })
-export class CountryDetailsComponent implements OnInit, OnDestroy {
+export class CountryDetailsComponent implements OnInit, OnDestroy, AfterViewInit {
   // UI state flags
   // True until data received or error thrown
   loading = true;
@@ -33,13 +33,34 @@ export class CountryDetailsComponent implements OnInit, OnDestroy {
   // Not really needed for HttpClient, but good practice
   private detailsSub?: Subscription;
 
-  // Custom single-line color scheme for chart
+  // Single-line color scheme for chart randomly selected from palette
   readonly colorScheme: Color = {
     name: 'singleLine',
     selectable: false,
     group: ScaleType.Ordinal,
-    domain: ['#793D52'],
+    domain: [
+      (colors => colors[Math.floor(Math.random() * colors.length)])([
+        '#956065', // rose-taupe
+        '#B8CBE7', // powder-blue
+        '#793D52', // quinacridone-magenta
+        '#9780A1', // mountbatten-pink
+        '#BFE0F1', // columbia-blue
+        '#89A1DB', // vista-blue
+      ])
+    ],
   };
+
+  // Used to set aspect ratio for line chart
+  private readonly CHART_ASPECT_RATIO = 16 / 9;
+  // Reference to resize handler to remove it on destroy
+  private readonly resizeListener = () => this.updateChartSize();
+  // Minimum chart dimensions
+  private readonly MIN_CHART_WIDTH = 400;
+  private readonly MIN_CHART_HEIGHT = 225;
+  // Chart scaling factor
+  private readonly CHART_SCALE_FACTOR = 0.8;
+  // Holds chart dimensions
+  chartView: [number, number] = [this.MIN_CHART_WIDTH, this.MIN_CHART_HEIGHT];
 
   constructor(private route: ActivatedRoute, private olympicService: OlympicService) {}
 
@@ -55,7 +76,7 @@ export class CountryDetailsComponent implements OnInit, OnDestroy {
       return;
     }
 
-    // Create observable that fetches a single country's detail object
+    // Create a subscription to fetch a single country's detail object
     this.detailsSub = this.olympicService.getCountryDetailsById(this.countryId).subscribe({
       // HTTP request successful
       next: (details) => {
@@ -63,7 +84,7 @@ export class CountryDetailsComponent implements OnInit, OnDestroy {
         if (!details) {
           this.loading = false;
           this.loadError = true;
-          this.errorMessage = `No country was not found with the ID ${this.countryId}.`;
+          this.errorMessage = `No country was found with the ID ${this.countryId}.`;
           return;
         }
 
@@ -82,6 +103,9 @@ export class CountryDetailsComponent implements OnInit, OnDestroy {
         // Turn loading off
         this.loading = false;
         this.loadError = false;
+
+        // Defer setting initial chart size until first tick after content is fully loaded
+        setTimeout(() => this.updateChartSize(), 0);
       },
       // HTTP request failed
       error: () => {
@@ -92,13 +116,44 @@ export class CountryDetailsComponent implements OnInit, OnDestroy {
     });
   }
 
+  ngAfterViewInit(): void {
+    // Listen for window resize events to recalculate chart dimensions
+    window.addEventListener('resize', this.resizeListener);
+  }
+
   ngOnDestroy(): void {
+    // Remove event listeners to prevent memory leaks
+    window.removeEventListener('resize', this.resizeListener);
     //  Unsubscribing not required for HttpClient, but good pattern to have in place
     this.detailsSub?.unsubscribe();
   }
 
-  // Tooltip format for line chart: show year and medal count with glyph
-  formatTooltip({ name, value }: any): string {
-    return `${name}<br>\uE001 ${value}`;
+  private updateChartSize(): void {
+    // Last element above line chart
+    const statsContainer = document.querySelector('.stats-container') as HTMLElement | null;
+
+    // Safety check
+    if (!statsContainer) return;
+
+    // Find remaining visible vertical space under stats container
+    const statsContainerBottom = statsContainer.getBoundingClientRect().bottom;
+    const statsContainerBottMargin = parseFloat(getComputedStyle(statsContainer).marginBottom) || 0;
+    const remainVisibVertSpace = window.innerHeight - (statsContainerBottom + statsContainerBottMargin);
+
+    // Calculate max possible height based on aspect ratio
+    const idealHeight = Math.min(remainVisibVertSpace, window.innerWidth / this.CHART_ASPECT_RATIO);
+    const idealWidth = idealHeight * this.CHART_ASPECT_RATIO;
+
+    // Scale down chart size by predefined factor while enforcing minimum size
+    const chartWidth = Math.max(Math.floor(idealWidth * this.CHART_SCALE_FACTOR), this.MIN_CHART_WIDTH);
+    const chartHeight = Math.max(Math.floor(idealHeight * this.CHART_SCALE_FACTOR), this.MIN_CHART_HEIGHT);
+
+    // ngx-charts expects an array [width, height]
+    this.chartView = [chartWidth, chartHeight];
+  }
+
+  // Format Y-axis ticks as integers only (hide decimals)
+  yAxisTickFormatting(value: number): string {
+    return Number.isInteger(value) ? value.toString() : '';
   }
 }

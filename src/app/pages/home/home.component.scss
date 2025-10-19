@@ -51,13 +51,13 @@
 
 .chart-container {
   display: flex;
-  justify-content: center;  // horizontally centers the chart
+  justify-content: center; // horizontally centers the chart
   width: 100%;
 }
 
 // Compensate for internal padding of chart SVG
 ::ng-deep ngx-charts-pie-chart svg {
-  margin-top: -60px;   // adjust upward
+  margin-top: -60px; // adjust upward
 }
 
 // Customize pie chart label font size

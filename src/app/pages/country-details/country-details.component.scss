@@ -47,6 +47,17 @@
   }
 }
 
+.chart-container {
+  display: flex;
+  justify-content: center; // horizontally centers the chart
+  width: 100%;
+}
+
+// Compensate for internal padding of chart SVG
+::ng-deep ngx-charts-line-chart svg {
+  margin-left: -10px; // adjust left
+}
+
 // Line style: 2px thick
 ::ng-deep ngx-charts-line-chart g.line-series path {
   stroke-width: 2px !important;

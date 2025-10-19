@@ -33,7 +33,7 @@
   <div class="chart-container" *ngIf="details.medalHistory?.length">
     <ngx-charts-line-chart
       [results]="[{ name: details.name, series: details.medalHistory }]"
-      [view]="[600, 400]"
+      [view]="chartView"
       [xAxis]="true"
       [yAxis]="true"
       [yScaleMin]="yScaleMin"
@@ -41,6 +41,7 @@
       [showXAxisLabel]="true"
       [showYAxisLabel]="false"
       [xAxisLabel]="'Dates'"
+      [yAxisTickFormatting]="yAxisTickFormatting"
       [showGridLines]="true"
       [roundDomains]="true"
       [animations]="false"
