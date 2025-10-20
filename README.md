@@ -73,7 +73,7 @@ The app is built with **Angular** and **RxJS**, following best practices for mod
 - **RxJS Observables** handle asynchronous data flow
 - **Strong typing** for data structures throughout using TypeScript interfaces
 - **unsubscribe** done manually, even for Observables which complete automatically
-- **ngx-charts v20.1.0** used for data visualization, with customized appearance via SCSS
+- **ngx-charts** used for data visualization, with customized appearance via SCSS
 - **Responsive chart sizing** using viewport calculations
 - **Error handling** for all HTTP requests
 - **Logic**, **Data**, and **Presentation** are clearly separated
