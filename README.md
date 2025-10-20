@@ -1,29 +1,166 @@
-# OlympicGamesStarter
+# Olympic Games Dashboard
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 18.0.3.
+This Angular web application is being developed for **TéléSport** by **DelivWeb** to provide an interactive Olympic Games dashboard.  
+It lets users explore medal statistics from past Olympic Games through data visualizations.
 
-Don't forget to install your node_modules before starting (`npm install`).
+---
 
-## Development server
+## Overview
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+The application consists of two fully responsive pages:
 
-## Build
+### 1. Home Page
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
+**Route:** `/`
 
-## Where to start
+- Displays a title box: **“Medals per Country”**  
+- Shows two statistics:
+  - **Number of Games** (unique Olympic years present in dataset)
+  - **Number of Countries** that participated  
+- Presents a **pie chart** showing the **total number of medals per country** across all years.
+  - Implemented using **ngx-charts**
+  - The chart is dynamically sized and centered within the viewport
+  - Each slice and its label are clickable; clicking navigates to the country’s detail page
+  - Tooltips display a medal glyph followed by the medal count
+  - Resizes dynamically with the window
+- Handles loading and error states with a spinner and user-friendly messages
 
-As you can see, an architecture has already been defined for the project. It is just a suggestion, you can choose to use your own. The predefined architecture includes (in addition to the default angular architecture) the following:
+---
 
-- `components` folder: contains every reusable components
-- `pages` folder: contains components used for routing
-- `core` folder: contains the business logic (`services` and `models` folders)
+### 2. Country Details Page
 
-I suggest you to start by understanding this starter code. Pay an extra attention to the `app-routing.module.ts` and the `olympic.service.ts`.
+**Route:** `/details/:id`
 
-Once mastered, you should continue by creating the typescript interfaces inside the `models` folder. As you can see I already created two files corresponding to the data included inside the `olympic.json`. With your interfaces, improve the code by replacing every `any` by the corresponding interface.
+- Displays a title box: **Country Name**
+- Shows three statistics:
+  - **Number of Entries** (total participations)
+  - **Total Medals**
+  - **Total Athletes**
+- Includes a **line chart** presenting the country’s medal counts over time:
+  - **X-axis:** Years (labeled *Dates*)
+  - **Y-axis:** Number of medals
+  - Maintains a **16:9 aspect ratio** and resizes dynamically with the window
+- Provides user feedback for invalid IDs or network errors
 
-You're now ready to implement the requested features.
+---
 
-Good luck!
+### 3. Not Found Page
+
+**Route:** `**` (fallback)
+
+Displays a simple message when the user navigates to a non-existent route.
+
+---
+
+## Header & Navigation
+
+A persistent header is present on all pages. It contains:
+
+- **Title:** “Olympic Games App”
+- **Navigation:** a single **Home** button
+
+The **Home** button is the primary way to leave the details page and return to the home page.  
+It links to the root route: `/`.
+
+---
+
+## Architecture and Design
+
+The app is built with **Angular** and **RxJS**, following best practices for modularity and reusability.
+
+- **Services** dedicated for handling all data fetching and transformations
+- **Components** manage presentation and user interactions
+- **RxJS Observables** handle asynchronous data flow
+- **Strong typing** for data structures throughout using TypeScript interfaces
+- **unsubscribe** done manually, even for Observables which complete automatically
+- **ngx-charts v20.1.0** used for data visualization, with customized appearance via SCSS
+- **Responsive chart sizing** using viewport calculations
+- **Error handling** for all HTTP requests
+- **Logic**, **Data**, and **Presentation** are clearly separated
+- **Notes**:
+  - All pages automatically load their data; no refresh required
+  - The app assumes an online environment (no offline caching implemented)
+
+### Main Service: `OlympicService`
+
+| Method | Description |
+|--------|--------------|
+| `getOlympics()` | Loads the complete dataset (`./assets/mock/olympic.json`) |
+| `getTotalMedalsByCountry()` | Aggregates total medals per country |
+| `getGlobalStats()` | Calculates total number of games and countries |
+| `getIdsByName()` | Builds a lookup table for navigation |
+| `getCountryDetailsById(id)` | Returns detailed statistics for a specific country |
+
+All HTTP errors are caught and logged, with user-facing messages displayed.
+
+---
+
+## Data Models
+
+**OlympicCountry**
+```ts
+{
+  id: number;
+  country: string;
+  participations: Participation[];
+}
+```
+
+**Participation**
+```ts
+{
+  id: number;
+  year: number;
+  city: string;
+  medalsCount: number;
+  athleteCount: number;
+}
+```
+
+**CountryDetails**
+```ts
+{
+  name: string;
+  participationCount: number;
+  totalMedals: number;
+  totalAthletes: number;
+  medalHistory: { name: string; value: number }[];
+}
+```
+
+---
+
+## Behavior Summary
+
+| Situation | Result |
+|------------|---------|
+| App loads | Dashboard appears after data fetch with spinner |
+| Click on pie slice or label | Navigates to `/details/:id` for that country |
+| Invalid country ID | Displays “No country found” message |
+| Data fetch fails | Shows “An error has occurred. Please try again.” |
+| Window resized | Charts automatically rescale |
+| Unknown route | Redirected to Not Found page |
+
+---
+
+## Styling and User Experience
+
+- Consistent color palette with blue and rose tones
+- Fully responsive layout for both desktop and mobile
+- Custom SCSS ensures unified appearance with clear visual elements and typography
+- Spinner and error messages provide feedback during loading or connection issues
+- Charts styled for clarity and readability in accordance with provided mock-ups
+- Tooltips currently use default ngx-charts formatting due to version compatibility
+
+---
+
+## Run Notes
+
+To run the project locally:
+
+```bash
+npm install
+ng serve
+```
+
+Then open [http://localhost:4200](http://localhost:4200)
