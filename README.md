@@ -80,6 +80,8 @@ The app is built with **Angular** and **RxJS**, following best practices for mod
   - All pages automatically load their data; no refresh required
   - The app assumes an online environment (no offline caching implemented)
 
+---
+
 ### Main Service: `OlympicService`
 
 | Method | Description |
