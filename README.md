@@ -18,7 +18,6 @@ The application consists of two fully responsive pages:
   - **Number of Games** (unique Olympic years present in dataset)
   - **Number of Countries** that participated  
 - Presents a **pie chart** showing the **total number of medals per country** across all years.
-  - Implemented using **ngx-charts**
   - The chart is dynamically sized and centered within the viewport
   - Each slice and its label are clickable; clicking navigates to the country’s detail page
   - Tooltips display a medal glyph followed by the medal count
