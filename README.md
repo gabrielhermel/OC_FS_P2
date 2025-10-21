@@ -77,8 +77,13 @@ The app is built with **Angular** and **RxJS**, following best practices for mod
 - **Error handling** for all HTTP requests
 - **Logic**, **Data**, and **Presentation** are clearly separated
 - **Notes**:
-  - All pages automatically load their data; no refresh required
+  - All pages automatically load their data; no manual refresh is required
   - The app assumes an online environment (no offline caching implemented)
+  - The provided project skeleton was built using **Angular 18.0.3**
+    - To ensure stable integration and avoid significant refactoring, compatible NPM module versions were selected:
+      - `"@angular/cdk": "^18.2.14"`
+      - `"rxjs": "~7.8.0"`
+      - `"@swimlane/ngx-charts": "^20.1.0"`
 
 ---
 
