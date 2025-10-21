@@ -97,8 +97,6 @@ The app is built with **Angular** and **RxJS**, following best practices for mod
 | `getIdsByName()` | Builds a lookup table for navigation |
 | `getCountryDetailsById(id)` | Returns detailed statistics for a specific country |
 
-All HTTP errors are caught and logged, with user-facing messages displayed.
-
 ---
 
 ### Data Models
