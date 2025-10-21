@@ -7,9 +7,18 @@ It lets users explore medal statistics from past Olympic Games through data visu
 
 ## Overview
 
-The application consists of two fully responsive pages:
+### Header & Navigation
 
-### 1. Home Page
+A persistent header is present on all pages. It contains:
+
+- **Title:** “Olympic Games App”
+- **Navigation:** a single **Home** button
+
+The **Home** button is the primary way to leave the details page and return to the home page. It links to the root route: `/`.
+
+---
+
+### Home Page
 
 **Route:** `/`
 
@@ -26,7 +35,7 @@ The application consists of two fully responsive pages:
 
 ---
 
-### 2. Country Details Page
+### Country Details Page
 
 **Route:** `/details/:id`
 
@@ -43,23 +52,11 @@ The application consists of two fully responsive pages:
 
 ---
 
-### 3. Not Found Page
+### Not Found Page
 
 **Route:** `**` (fallback)
 
 Displays a simple message when the user navigates to a non-existent route.
-
----
-
-## Header & Navigation
-
-A persistent header is present on all pages. It contains:
-
-- **Title:** “Olympic Games App”
-- **Navigation:** a single **Home** button
-
-The **Home** button is the primary way to leave the details page and return to the home page.  
-It links to the root route: `/`.
 
 ---
 
@@ -193,7 +190,7 @@ The app is built with **Angular** and **RxJS**, following best practices for mod
 
 ---
 
-### Installing Dependencies & Running the App
+### Installing Dependencies and Running the App
 
 - Navigate into the project root folder (default folder name matches the repo name)
 
