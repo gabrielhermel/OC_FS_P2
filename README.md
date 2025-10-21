@@ -101,9 +101,10 @@ All HTTP errors are caught and logged, with user-facing messages displayed.
 
 ---
 
-## Data Models
+### Data Models
 
 **OlympicCountry**
+
 ```ts
 {
   id: number;
@@ -113,6 +114,7 @@ All HTTP errors are caught and logged, with user-facing messages displayed.
 ```
 
 **Participation**
+
 ```ts
 {
   id: number;
@@ -124,6 +126,7 @@ All HTTP errors are caught and logged, with user-facing messages displayed.
 ```
 
 **CountryDetails**
+
 ```ts
 {
   name: string;
