@@ -168,7 +168,7 @@ All HTTP errors are caught and logged, with user-facing messages displayed.
 
 ### Cloning the Repository
 
-- **Open a terminal or command prompt at the folder where you want the project to be stored**
+- Open a terminal or command prompt at the folder where you want the project to be stored
   - In **File Explorer (Windows)** / **Finder (macOS)** / **your file manager (Linux)** right-click the desired folder and:
     - **macOS:** Select **Services**, and then **New Terminal at Folder**.  
     - **Windows:** Select **Open in Terminal**.  
@@ -179,30 +179,31 @@ All HTTP errors are caught and logged, with user-facing messages displayed.
     cd path/to/project/parent/folder
     ```
     (Replace `path/to/project/parent/folder` with the full path where you want the project saved.)
-- **Clone the repository**
+- Clone the repository
 
   ```bash
   git clone https://github.com/gabrielhermel/OC_FS_P2.git
   ```
-- **Navigate into the project root folder** (default folder name matches the repo name)
+
+---
+
+### Installing Dependencies & Running the App
+
+- Navigate into the project root folder (default folder name matches the repo name)
 
   ```bash
   cd OC_FS_P2
   ```
   (If you used a custom folder name while cloning, replace `OC_FS_P2` with that name in the command above.)
 
----
-
-### Installing Dependencies & Running the App
-
-- From the project root (where you should be now in the console/terminal), install dependencies and start the local development server:
+- Install dependencies and start the local development server
 
   ```bash
   npm install
   npx ng serve
   ```
 
-- ***If*** `npx ng serve` is not available, install the Angular CLI globally and run again:
+- ***If*** `npx ng serve` is not available, install the Angular CLI globally and run again
 
   ```bash
   npm install -g @angular/cli
