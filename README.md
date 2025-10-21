@@ -157,11 +157,56 @@ All HTTP errors are caught and logged, with user-facing messages displayed.
 
 ## Run Notes
 
-To run the project locally:
+### Prerequisites
 
-```bash
-npm install
-ng serve
-```
+- **Git** (required to clone the repository):
+  [https://git-scm.com/downloads](https://git-scm.com/downloads)
+- **Node.js & npm** (required to install dependencies and run the dev server):
+  [https://nodejs.org/en/download](https://nodejs.org/en/download)
 
-Then open [http://localhost:4200](http://localhost:4200)
+---
+
+### Cloning the Repository
+
+- **Open a terminal or command prompt at the folder where you want the project to be stored**
+  - In **File Explorer (Windows)** / **Finder (macOS)** / **your file manager (Linux)** right-click the desired folder and:
+    - **macOS:** Select **Services**, and then **New Terminal at Folder**.  
+    - **Windows:** Select **Open in Terminal**.  
+    - **Linux:** Select **Open in Terminal**.  
+  - **(Alternative)** If you already have a terminal or command prompt open, you can manually navigate to the folder by typing:  
+
+    ```bash
+    cd path/to/project/parent/folder
+    ```
+    (Replace `path/to/project/parent/folder` with the full path where you want the project saved.)
+- **Clone the repository**
+
+  ```bash
+  git clone https://github.com/gabrielhermel/OC_FS_P2.git
+  ```
+- **Navigate into the project root folder** (default folder name matches the repo name)
+
+  ```bash
+  cd OC_FS_P2
+  ```
+  (If you used a custom folder name while cloning, replace `OC_FS_P2` with that name in the command above.)
+
+---
+
+### Installing Dependencies & Running the App
+
+- From the project root (where you should be now in the console/terminal), install dependencies and start the local development server:
+
+  ```bash
+  npm install
+  npx ng serve
+  ```
+
+- ***If*** `npx ng serve` is not available, install the Angular CLI globally and run again:
+
+  ```bash
+  npm install -g @angular/cli
+  ng serve
+  ```
+
+- Go to: [http://localhost:4200](http://localhost:4200)
