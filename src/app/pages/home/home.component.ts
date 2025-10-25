@@ -11,8 +11,8 @@ import { Subscription } from 'rxjs';
   styleUrls: ['./home.component.scss'],
 })
 export class HomeComponent implements OnInit, OnDestroy {
-  // Minimum chart edge length
-  private readonly MIN_CHART_SIZE = 300;
+  // Minimum chart edge length (set to minimum common mobile device width)
+  private readonly MIN_CHART_SIZE = 360;
   // Reference to resize handler to remove it on destroy
   private readonly resizeListener = () => this.updateChartSize();
   // Chart color palette (first six custom, rest auto-generated)
@@ -29,6 +29,10 @@ export class HomeComponent implements OnInit, OnDestroy {
       '#89A1DB', // vista-blue
     ],
   };
+  // The maximum ratio of chart width to window width above which to trim labels
+  private readonly MAX_RATIO_TRIM_LABELS: number = 0.85;
+  // Size of the chart in relation to available viewport
+  private readonly CHART_TO_VP_RATIO: number = 0.95;
 
   // Will hold list of raw olympics data
   olympics: OlympicCountry[] = [];
@@ -47,6 +51,8 @@ export class HomeComponent implements OnInit, OnDestroy {
   chartData: { name: string; value: number }[] = [];
   // Holds chart size
   chartView: [number, number] = [this.MIN_CHART_SIZE, this.MIN_CHART_SIZE];
+  // Determines whether chart labels are trimmed with an ellipsis
+  trimLabels: boolean = false;
   // Lookup object mapping country names to their IDs
   countryIdsByName: Record<string, number> = {};
 
@@ -132,11 +138,18 @@ export class HomeComponent implements OnInit, OnDestroy {
 
     // Keeps chart square by using smaller of page width vs remaining vertical space
     // Available space value rounded to prevent subpixel values
-    // Enforces minimum size
+    // Scales chart in relation to viewport and enforces minimum size
     const chartEdgeLenPx = Math.max(
-      Math.floor(Math.min(window.innerWidth, remainVisibVertSpace)),
+      Math.floor(
+        Math.min(window.innerWidth, remainVisibVertSpace) *
+          this.CHART_TO_VP_RATIO
+      ),
       this.MIN_CHART_SIZE
     );
+
+    // Trim labels if ratio of chart width to window width exceeds threshold
+    this.trimLabels =
+      chartEdgeLenPx / window.innerWidth > this.MAX_RATIO_TRIM_LABELS;
 
     // ngx-charts expects an array [width, height]
     this.chartView = [chartEdgeLenPx, chartEdgeLenPx];

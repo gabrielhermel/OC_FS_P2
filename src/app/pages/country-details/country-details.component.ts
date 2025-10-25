@@ -54,15 +54,23 @@ export class CountryDetailsComponent
 
   // Used to set aspect ratio for line chart
   private readonly CHART_ASPECT_RATIO = 16 / 9;
+  // Minimum chart width (set to minimum common mobile device width)
+  private readonly CHART_MIN_WIDTH = 360;
+  // Max chart width (prevents chart getting much wider than stats boxes)
+  private readonly CHART_MAX_WIDTH = 700;
+  // Derived height constraints
+  private readonly CHART_MIN_HEIGHT =
+    this.CHART_MIN_WIDTH / this.CHART_ASPECT_RATIO;
+  private readonly CHART_MAX_HEIGHT =
+    this.CHART_MAX_WIDTH / this.CHART_ASPECT_RATIO;
+  // Chart scaling factor
+  private readonly CHART_SCALE_FACTOR = 0.9;
+
   // Reference to resize handler to remove it on destroy
   private readonly resizeListener = () => this.updateChartSize();
-  // Minimum chart dimensions
-  private readonly MIN_CHART_WIDTH = 400;
-  private readonly MIN_CHART_HEIGHT = 225;
-  // Chart scaling factor
-  private readonly CHART_SCALE_FACTOR = 0.8;
+
   // Holds chart dimensions
-  chartView: [number, number] = [this.MIN_CHART_WIDTH, this.MIN_CHART_HEIGHT];
+  chartView: [number, number] = [this.CHART_MIN_WIDTH, this.CHART_MIN_HEIGHT];
 
   constructor(
     private route: ActivatedRoute,
@@ -145,27 +153,29 @@ export class CountryDetailsComponent
     if (!statsContainer) return;
 
     // Find remaining visible vertical space under stats container
-    const statsContainerBottom = statsContainer.getBoundingClientRect().bottom;
-    const statsContainerBottMargin =
+    const statsBottom = statsContainer.getBoundingClientRect().bottom;
+    const statsMarginBottom =
       parseFloat(getComputedStyle(statsContainer).marginBottom) || 0;
-    const remainVisibVertSpace =
-      window.innerHeight - (statsContainerBottom + statsContainerBottMargin);
+    const availableHeight =
+      window.innerHeight - (statsBottom + statsMarginBottom);
 
-    // Calculate max possible height based on aspect ratio
+    // Compute ideal height based on available vertical space and aspect ratio considering screen width
+    const widthLimitedHeight = window.innerWidth / this.CHART_ASPECT_RATIO;
     const idealHeight = Math.min(
-      remainVisibVertSpace,
-      window.innerWidth / this.CHART_ASPECT_RATIO
+      availableHeight,
+      widthLimitedHeight,
+      this.CHART_MAX_HEIGHT
     );
     const idealWidth = idealHeight * this.CHART_ASPECT_RATIO;
 
-    // Scale down chart size by predefined factor while enforcing minimum size
+    // Apply scale factor while enforcing minimum dimensions and avoiding subpixel values
     const chartWidth = Math.max(
       Math.floor(idealWidth * this.CHART_SCALE_FACTOR),
-      this.MIN_CHART_WIDTH
+      this.CHART_MIN_WIDTH
     );
     const chartHeight = Math.max(
       Math.floor(idealHeight * this.CHART_SCALE_FACTOR),
-      this.MIN_CHART_HEIGHT
+      this.CHART_MIN_HEIGHT
     );
 
     // ngx-charts expects an array [width, height]
