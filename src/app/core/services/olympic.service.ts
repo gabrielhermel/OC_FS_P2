@@ -1,7 +1,7 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, throwError } from 'rxjs';
-import { catchError, map } from 'rxjs/operators';
+import { catchError, delay, map, mergeMap } from 'rxjs/operators';
 import { OlympicCountry } from '../models/Olympic';
 import { CountryDetails } from '../models/CountryDetails';
 
@@ -16,6 +16,17 @@ export class OlympicService {
   // Fetch full list of Olympic countries
   getOlympics() {
     return this.http.get<OlympicCountry[]>(this.olympicUrl).pipe(
+      // DEBUG: Uncomment to simulate network delay
+      // delay(3000),
+      // DEBUG: Uncomment to simulate HTTP failure (internal server error)
+      // mergeMap(() =>
+      //   throwError(() => new HttpErrorResponse({
+      //     status: 500,
+      //     statusText: 'Internal Server Error',
+      //     url: this.olympicUrl,
+      //     error: { message: 'Unexpected backend failure' }
+      //   }))
+      // ),
       catchError((error) => {
         console.error('Failed to load Olympic data:', error);
         return throwError(() => error); // Let the component handle the error
